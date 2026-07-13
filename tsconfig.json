@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "moduleDetection": "force",
+    "target": "es6",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "strict": true,
+    "sourceMap": true,
+    "module": "commonjs"
+  }
+}
