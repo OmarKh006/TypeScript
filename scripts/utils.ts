@@ -1,17 +1,25 @@
 import { AppElement, TaskListElement, inputElement } from "./elements";
 import { initTaskListeners } from "./eventListeners";
 
-export const fetchData = (key) => {
+export const fetchData = (key: string) => {
   const data = localStorage.getItem(key);
   return data ? JSON.parse(data) : false;
 };
 
 export const toggleDarkMode = () => {
   AppElement?.classList.toggle("App--isDark");
-  saveToDB("darkModeFlag", AppElement?.classList.contains("App--isDark"));
+  saveToDB(
+    "darkModeFlag",
+    AppElement?.classList.contains("App--isDark") ?? false,
+  );
 };
 
-export const renderTaskList = (tasks) => {
+type Task = {
+  value: string;
+  isCompleted: boolean;
+};
+
+export const renderTaskList = (tasks: Task[]) => {
   let taskList = "";
 
   tasks.forEach((task) => {
@@ -35,7 +43,7 @@ export const renderTaskList = (tasks) => {
   inputElement.value = "";
 };
 
-export const deleteTask = (e, index) => {
+export const deleteTask = (index: number) => {
   const answer = confirm("هل أنت متأكد من حذف المهمة؟");
   if (answer === false) return;
 
@@ -46,7 +54,7 @@ export const deleteTask = (e, index) => {
   initTaskList(tasks);
 };
 
-export const addTask = (e) => {
+export const addTask = (e: Event) => {
   e.preventDefault();
   const taskValue = inputElement.value;
 
@@ -65,7 +73,7 @@ export const addTask = (e) => {
   initTaskList(tasks);
 };
 
-export const saveToDB = (key, data) => {
+export const saveToDB = <T>(key: string, data: T): void => {
   localStorage.setItem(key, JSON.stringify(data));
 };
 
@@ -81,7 +89,7 @@ export const renderEmptyState = () => {
     </li>`;
 };
 
-export const initTaskList = (tasks) => {
+export const initTaskList = (tasks: Task[]) => {
   if (tasks?.length) {
     renderTaskList(tasks);
     initTaskListeners();
@@ -90,10 +98,12 @@ export const initTaskList = (tasks) => {
   }
 };
 
-export const toggleTask = (e, index) => {
+export const toggleTask = (e: Event, index: number) => {
   const tasks = fetchData("tasks");
 
-  e.currentTarget.parentElement.classList.toggle("TaskList__taskContent--isActive");
+  (e.currentTarget as HTMLElement).parentElement?.classList.toggle(
+    "TaskList__taskContent--isActive",
+  );
   tasks[index].isCompleted = !tasks[index].isCompleted;
   saveToDB("tasks", tasks);
 };

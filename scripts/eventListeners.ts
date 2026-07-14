@@ -10,16 +10,19 @@ import { addTask, deleteTask, toggleDarkMode, toggleTask } from "./utils";
 
 export const initTaskListeners = () => {
   getDeleteIcons().forEach((icon, index) => {
-    icon.addEventListener("click", (e) => deleteTask(e, index));
+    icon.addEventListener("click", () => deleteTask(index));
   });
   getCheckboxElements().forEach((box, index) => {
     box.addEventListener("click", (e) => toggleTask(e, index));
-    box.addEventListener("keydown", (e) => e.key === "Enter" && toggleTask(e, index));
+    box.addEventListener(
+      "keydown",
+      (e: KeyboardEvent) => e.key === "Enter" && toggleTask(e, index),
+    );
   });
 };
 
 export const initListeners = () => {
-  darkThemeToggleElement.addEventListener("click", toggleDarkMode);
+  darkThemeToggleElement?.addEventListener("click", toggleDarkMode);
   TaskSearchBarButton?.addEventListener("click", addTask);
   TaskListLink?.addEventListener("click", () => {
     TaskListElement?.classList.toggle("TaskList__list--hideCompleted");
