@@ -6,9 +6,10 @@ import {
   getCheckboxElements,
   getDeleteIcons,
 } from "./elements";
+import type { InitListeners } from "./types";
 import { addTask, deleteTask, toggleDarkMode, toggleTask } from "./utils";
 
-export const initTaskListeners = () => {
+export const initTaskListeners: InitListeners = () => {
   getDeleteIcons().forEach((icon, index) => {
     icon.addEventListener("click", () => deleteTask(index));
   });
@@ -21,7 +22,7 @@ export const initTaskListeners = () => {
   });
 };
 
-export const initListeners = () => {
+export const initListeners: InitListeners = () => {
   darkThemeToggleElement?.addEventListener("click", toggleDarkMode);
   TaskSearchBarButton?.addEventListener("click", addTask);
   TaskListLink?.addEventListener("click", () => {

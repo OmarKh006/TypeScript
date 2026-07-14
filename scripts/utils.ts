@@ -1,12 +1,24 @@
 import { AppElement, TaskListElement, inputElement } from "./elements";
 import { initTaskListeners } from "./eventListeners";
+import type {
+  AddTask,
+  DeleteTask,
+  FetchData,
+  InitDataOnStartup,
+  InitTaskList,
+  RenderEmptyState,
+  RenderTaskList,
+  SaveToDB,
+  ToggleDarkMode,
+  ToggleTask,
+} from "./types";
 
-export const fetchData = (key: string) => {
+export const fetchData: FetchData = (key) => {
   const data = localStorage.getItem(key);
   return data ? JSON.parse(data) : false;
 };
 
-export const toggleDarkMode = () => {
+export const toggleDarkMode: ToggleDarkMode = () => {
   AppElement?.classList.toggle("App--isDark");
   saveToDB(
     "darkModeFlag",
@@ -14,12 +26,7 @@ export const toggleDarkMode = () => {
   );
 };
 
-type Task = {
-  value: string;
-  isCompleted: boolean;
-};
-
-export const renderTaskList = (tasks: Task[]) => {
+export const renderTaskList: RenderTaskList = (tasks) => {
   let taskList = "";
 
   tasks.forEach((task) => {
@@ -43,7 +50,7 @@ export const renderTaskList = (tasks: Task[]) => {
   inputElement.value = "";
 };
 
-export const deleteTask = (index: number) => {
+export const deleteTask: DeleteTask = (index) => {
   const answer = confirm("هل أنت متأكد من حذف المهمة؟");
   if (answer === false) return;
 
@@ -54,7 +61,7 @@ export const deleteTask = (index: number) => {
   initTaskList(tasks);
 };
 
-export const addTask = (e: Event) => {
+export const addTask: AddTask = (e) => {
   e.preventDefault();
   const taskValue = inputElement.value;
 
@@ -73,23 +80,23 @@ export const addTask = (e: Event) => {
   initTaskList(tasks);
 };
 
-export const saveToDB = <T>(key: string, data: T): void => {
+export const saveToDB: SaveToDB = (key, data) => {
   localStorage.setItem(key, JSON.stringify(data));
 };
 
-export const initDataOnStartup = () => {
+export const initDataOnStartup: InitDataOnStartup = () => {
   fetchData("darkModeFlag") && toggleDarkMode();
   initTaskList(fetchData("tasks"));
 };
 
-export const renderEmptyState = () => {
+export const renderEmptyState: RenderEmptyState = () => {
   TaskListElement.innerHTML = `<li class='EmptyList'>
       <img class='EmptyList__img' src="./assets/icon-empty.svg" alt="list is empty" />
       <p>قائمة المهام فارغة</p>
     </li>`;
 };
 
-export const initTaskList = (tasks: Task[]) => {
+export const initTaskList: InitTaskList = (tasks) => {
   if (tasks?.length) {
     renderTaskList(tasks);
     initTaskListeners();
@@ -98,7 +105,7 @@ export const initTaskList = (tasks: Task[]) => {
   }
 };
 
-export const toggleTask = (e: Event, index: number) => {
+export const toggleTask: ToggleTask = (e, index) => {
   const tasks = fetchData("tasks");
 
   (e.currentTarget as HTMLElement).parentElement?.classList.toggle(
